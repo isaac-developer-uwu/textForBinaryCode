@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Binário para texto</title>
+</head>
+
+<style>
+	.tela {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100vh;
+		margin: 0;
+		flex-direction: column;
+		gap: 10;
+	}
+
+	#textarea {
+		width: 90%;
+		height: 300px;
+		resize: none;
+		border-radius: 10px;
+		border: none;
+		outline: black 2px solid;
+		padding: 10px;
+	}
+
+	#textarea:focus {
+		outline: grey 2px solid;
+	}
+
+	button {
+  /* Variables */
+  --button_radius: 0.75em;
+  --button_color: #e8e8e8;
+  --button_outline_color: #000000;
+  font-size: 17px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--button_radius);
+  background: var(--button_outline_color);
+  margin-top: 30px;
+  width: 70%;
+}
+
+.button_top {
+  display: block;
+  box-sizing: border-box;
+  border: 2px solid var(--button_outline_color);
+  border-radius: var(--button_radius);
+  padding: 0.75em 1.5em;
+  background: var(--button_color);
+  color: var(--button_outline_color);
+  transform: translateY(-0.2em);
+  transition: transform 0.1s ease;
+}
+
+button:hover .button_top {
+  /* Pull the button upwards when hovered */
+  transform: translateY(-0.33em);
+}
+
+button:active .button_top {
+  /* Push the button downwards when pressed */
+  transform: translateY(0);
+}
+
+
+	#caracteres {
+		font-family: sans-serif;
+		font-weight: bold;
+
+	}
+
+	#texto {
+		border-radius: 10px;
+		height: 150px;
+		outline: 2px solid black;
+		border: none;
+		padding: 10px;
+		margin-top: 30px;
+		width: 70%;
+		font-size: 20px;
+		font-weight: bold;
+	}
+</style>
+
+<body>
+	<div class="tela">
+		<p id="caracteres">Caracteres: 0</p><br>
+		<textarea autocomplete="on" maxlength="9000" id="textarea" placeholder="Escreva ou cole um código binário que ele será convertido para texto: "></textarea>
+		<button class="convertbutton" id="convertButton">
+			<span class="button_top">Converter</span>
+		</button>
+		<textarea id="texto" readonly placeholder="O texto vai aparecer aqui!"></textarea>
+	</div>
+</body>
+
+<script>
+	const convertButton = document.getElementById('convertButton')
+	const url = "/string"
+	const binario = document.getElementById('texto')
+	const textarea = document.getElementById('textarea')
+	const caracteres = document.getElementById('caracteres')
+
+	textarea.addEventListener('input', () => {
+		
+		caracteres.innerText = "Caracteres: " + textarea.value.length
+	})
+
+	convertButton.addEventListener('click', () => {
+		let texto = document.getElementById('textarea')
+		if (texto.value != "") {
+				fetch(url, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({binary: texto.value})
+				})
+
+
+				.then(response => response.json())
+				.then(dados => {
+						binario.value = dados['mensagem']
+				})
+				.catch(erro => {
+						alert('erro na requisição')
+				})
+
+		} else {
+			alert('O texto não pode ser vazio')
+		}
+	})
+</script>
+</html>
