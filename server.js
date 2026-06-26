@@ -42,7 +42,12 @@ app.post('/string', (req, res) => {
 // 29: transforma o binario em decimal
 // 30: retorna o decimal em formato de string
 // 32: retira os espaços da string
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-	console.log('[*] SERVIDOR ONLINE NA PORTA: ', PORT)
-});
+module.exports = app;
+
+// O listen só roda se você estiver no seu PC
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log('[*] SERVIDOR LOCAL ONLINE NA PORTA: ', PORT);
+    });
+}
